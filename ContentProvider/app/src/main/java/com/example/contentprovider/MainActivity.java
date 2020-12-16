@@ -6,20 +6,23 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ListView lv_tel;
+    private Button btn;
     ArrayAdapter<String> adapter;
 
     List<String> contactsList = new ArrayList<>();
@@ -29,12 +32,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         lv_tel = findViewById(R.id.lv_tel);
+        btn = findViewById(R.id.btn_jump);
         init();
     }
 
     private void init() {
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, contactsList);
         lv_tel.setAdapter(adapter);
+        btn.setOnClickListener(this);
 
         // 请求权限
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
@@ -77,6 +82,15 @@ public class MainActivity extends AppCompatActivity {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     readContacts();
                 }
+                break;
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_jump:
+                startActivity(new Intent(MainActivity.this, NextActivity.class));
                 break;
         }
     }
